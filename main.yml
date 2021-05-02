@@ -1,0 +1,23 @@
+- hosts: all
+  roles:
+    - timezone
+    - apt-upgrade
+    - packages
+    - dotfiles
+    - emacs
+    - cmigemo
+    - python
+    - source-highlight
+
+# ansible-galaxy install robgmills.minidlna
+- hosts: all
+  become: true
+  vars:
+    minidlna:
+      media_dirs:
+        - /var/lib/minidlna
+        - A,/var/lib/radio
+
+  roles:
+    - robgmills.minidlna
+    - radio

@@ -14,6 +14,7 @@
   become: true
   vars:
     minidlna:
+      port: 8200
       media_dirs:
         - /var/lib/minidlna
         - A,/var/lib/radio

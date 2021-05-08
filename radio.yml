@@ -1,0 +1,13 @@
+# ansible-galaxy install robgmills.minidlna
+- hosts: target
+  become: true
+  vars:
+    minidlna:
+      port: 8200
+      media_dirs:
+        - /var/lib/minidlna
+        - A,/var/lib/radio
+
+  roles:
+    - robgmills.minidlna
+    - radio

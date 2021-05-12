@@ -1,2 +1,5 @@
-[target]
-radio
+# -*- mode: yaml -*-
+
+target:
+  hosts:
+    radio:

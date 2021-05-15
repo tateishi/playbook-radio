@@ -11,3 +11,17 @@
   roles:
     - robgmills.minidlna
     - radio
+    - name: install autofs
+      role: cmprescott.autofs
+      autofs_indirect_maps:
+        - name: "auto.fs-nas"
+          path: /mnt/nfs
+          mark: "nfs mount from fs3"
+          options: "--timeout=60"
+          mounts:
+            - name: fs1
+              fstype: "nfs,rw"
+              url: "fs1.tateishi:/volume1/nfs/radio"
+            - name: fs3
+              fstype: "nfs,rw"
+              url: "fs3.tateishi:/data/Radio"

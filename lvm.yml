@@ -1,0 +1,48 @@
+- hosts: target
+  vars:
+    vg_name: vg
+    lv_name: lvol
+    lv_size: +100%FREE
+    lv_fstype: ext4
+    lv_mount: /var/lib/radio
+
+  tasks:
+    - name: find all disk drives
+      find:
+        path: /dev
+        file_type: any
+        patterns: "^sd[b-z]$"
+        use_regex: true
+      register: found_drives
+
+    - name: print derives
+      debug:
+        msg: "{{ found_drives.files | map(attribute='path') | sort | join(',') }}"
+
+    - name: create volume group
+      become: true
+      lvg:
+        vg: "{{ vg_name }}"
+        pvs: "{{ found_drives.files | map(attribute='path') | join(',') }}"
+
+    - name: create logical volume
+      become: true
+      lvol:
+        vg: "{{ vg_name }}"
+        lv: "{{ lv_name }}"
+        size: "{{ lv_size }}"
+
+    - name: create filesystem
+      become: true
+      filesystem:
+        fstype: "{{ lv_fstype }}"
+        dev: "/dev/{{ vg_name }}/{{ lv_name }}"
+        resizefs: true
+
+    - name: mount filesystem
+      become: true
+      mount:
+        path: "{{ lv_mount }}"
+        src: "/dev/{{ vg_name }}/{{ lv_name }}"
+        fstype: "{{ lv_fstype }}"
+        state: mounted
